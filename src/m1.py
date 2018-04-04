@@ -89,6 +89,8 @@ class CircleChanger(object):
         self.circle = rg.Circle(self.center, radius)
         self.circle.fill_color = fill_color
         self.colors = colors
+        self.oc = fill_color
+        self.count = 0
         # --------------------------------------------------------------
         # Change the above "animation_factor" if the animations
         # go too fast or too slow for your tastes.  Setting it to N
@@ -368,15 +370,12 @@ class CircleChanger(object):
             :rtype CircleChanger
         """
         x = (self.center.x + other_circle_changer.center.x)/2
-        y = (self.center.y - other_circle_changer.center.y)/2
-        point = rg.Point(x, y)
-        radius = ((x**2+ y**2)**0.5)/2
-        cir = rg.Circle(point, radius)
-        cir.fill_color = 'red'
-        cir.colors = self.colors + other_circle_changer.colors
-        return cir
+        y = (self.center.y + other_circle_changer.center.y)/2
+        radius = self.get_distance_from(other_circle_changer.center)/2
+        circle = CircleChanger(x, y, radius, 'red', self.colors+ other_circle_changer.colors)
+        return circle
         ################################################################
-        # TODO: 6.
+        # DONE: 6.
         #   First, READ the doc-string (specification) above.
         #   Second, READ the   run_test_swallow   function (below).
         #   Third, implement and test this method.
@@ -406,9 +405,9 @@ class CircleChanger(object):
         Type hints:
             :type index_of_color: int
         """
-
+        self.circle.fill_color = self.colors[index_of_color]
         ################################################################
-        # TODO: 7.
+        # DONE: 7.
         #   First, READ the doc-string (specification) above.
         #   Second, READ the   run_test_change_color   function (below).
         #   Third, implement and test this method.
@@ -424,8 +423,9 @@ class CircleChanger(object):
                the same color that it was when this CircleChanger
                was constructed.
         """
+        self.circle.fill_color = self.oc
         ################################################################
-        # TODO: 8.
+        # DONE: 8.
         #   First, READ the doc-string (specification) above.
         #   Second, READ the   run_test_change_to_original_color   function
         #   (below).  Third, implement and test this method.
@@ -463,6 +463,10 @@ class CircleChanger(object):
         Note: Other methods that affect this CircleChanger's circle's
         fill color have no effect on or interaction with this method.
         """
+        x = self.count % len(self.colors)
+        self.circle.fill_color = self.colors[x]
+        self.count = self.count+ 1
+        return self.count
         ################################################################
         # TODO: 9.
         #   First, READ the doc-string (specification) above.
